@@ -1,0 +1,80 @@
+import os
+import pandas as pd
+import numpy as np
+import xlrd
+
+path = "C:\\users\\Windows\\Desktop\\Finalproject\\code"
+os.chdir(path)
+
+def filename():
+    global fn
+    #fn = "Data3.xlsx"
+    fn = input("Input location filename here :")+'.xlsx'
+
+def num():
+    global nm
+    nm = input("Input number of subject :")
+    #nm = "Sheet10"
+
+def readfile(fn,nm):
+    global df1,alldata,list_allergen
+    df1 = pd.read_excel(fn,sheet_name=nm,header=0)
+    alldata = df1.as_matrix()
+    #list_allergen = list()
+    #for i in alldata:
+    #    list_al = i[1]
+    #    list_allergen.append(list_al)
+    #list_allergen.sort()
+        
+def Data():
+    global Dt
+    Dt = list()
+    i = 0
+    while i < len(alldata):
+        if alldata[i][2] == '*':
+            A = alldata[i]
+            Dt.append(A)
+        i+= 1
+    print("==============================")
+    print('Number of sample that subject have an effect\n=',len(Dt),'\n ==============================')
+    name_Dt = list()
+    for i in Dt:
+        name = i[1]
+        name_Dt.append(name)
+    name_Dt.sort()
+    for i in name_Dt:
+        print(i)
+        
+def main():
+    print("Database about of allergen in the patients \nUser should keys the database location and patient tag to find the data about allergen")
+    done = False
+    while not done:
+        MAIN = input("\n1)Database | 2)Patient Tag | (H)elp | Q)uite. :")
+        try:
+            if MAIN == '1' or MAIN == 'one' or MAIN == 'One':
+                filename()
+                num()
+                readfile(fn,nm)
+                alldata
+                Data()
+            elif MAIN == '2' or MAIN == 'two' or MAIN == 'Two':
+                num()
+                readfile(fn,nm)
+                alldata
+                Data()
+                print("=================================================")
+            elif MAIN == 'Q' or MAIN == 'q':
+                print("Close program, thank you for using")
+            elif MAIN == 'H' or MAIN == 'h':
+                print("""This program will show the database to search information in allergics patien to find what allergen they have
+                    \n 1)Database ==> Allow users key the file of information that want to search the data
+                    \n 2)Patient tag ==> Allow user key the tag of the patien that want to find the allergic reaction
+                    \n (Q) ==> Quite program""")
+                done = True
+            else:
+                print('*******please put correct command to run program*******')
+        except OSError:
+            print('Cannot find location of data,\nor values in file cannot use \nplease input location or check values in file again.')
+        except IndexError:
+            print('values are out of range, please close program to input data again.')
+main()
