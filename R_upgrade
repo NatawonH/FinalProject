@@ -1,0 +1,44 @@
+setwd("C:/Users/Windows/Desktop/Finalproject/code")
+library(xlsx)
+library(rio)
+
+
+data_list <- import_list("Data3_1.xlsx")
+keepdata = list()
+keep = list()
+
+i = 1
+x = 1:length(data_list)
+
+for(i in x){
+  data <- data.frame(data_list[i])
+  colnames(data) <- c("Order","SampleName","Result")
+  rawdata <- split(data,data$Result)
+  realdata <- data.frame(rawdata)
+  realdata[realdata=="AL"] <- paste("PT",as.character(i),sep = "_")
+  print(realdata)
+  keepdata <- append(keepdata,list(realdata))
+  i = i+1
+}
+
+for(i in 1:length(keepdata)){
+  if(length(as.character(keepdata[[i]])) == 0){
+    next
+  }
+  keep = append(keep,keepdata[i])
+}
+
+for(i in 1:length(keep)){
+  name = paste("HEAD",as.numeric(i),".xlsx",sep="_")
+  write.xlsx(keep[i],name)
+}
+
+DATA = read.xlsx("HEAD.xlsx",sheetName = "Sheet1")
+
+edge <- read.xlsx("test2.xlsx",sheetName = "Sheet1")
+node <- read.xlsx("test.xlsx",sheetName = "Sheet1")
+head(node)
+head(edge)
+net <- graph_from_data_frame(d=edge, vertices=node, directed=T) 
+plot(net,edge.arrow.size=.005, vertex.color=rainbow(7), vertex.size=9, 
+     vertex.frame.color="gray", vertex.label.color="black")
